@@ -5,11 +5,11 @@ import { Repository } from 'typeorm';
 import { CreateUserDTO } from '../../../dtos/create-user-dto';
 import { UpdatePatchUserDTO } from '../../../dtos/update-patch-user-dto';
 import { UpdateUserDTO } from '../../../dtos/update-user-dto';
-import { IUserRepository } from '../../../repositories/i-user.repository';
+import { AbstractUserService } from '../../../service/abstract-user.service';
 import { User } from '../entities/user.entity';
 
 @Injectable()
-export default class UserRepository implements IUserRepository {
+export default class UserRepository implements AbstractUserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
