@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { Role } from '../../../shared/enum/role.enum';
+import { Role } from '../../../core/enum/role.enum';
 import { AbstractUserService } from './service/abstract-user.service';
 import { CreateUserDTO } from './dtos/create-user-dto';
 import { UpdateUserDTO } from './dtos/update-user-dto';
