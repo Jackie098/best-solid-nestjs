@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from '../../../dtos/create-user-dto';
-import { UpdatePatchUserDTO } from '../../../dtos/update-patch-user-dto';
-import { UpdateUserDTO } from '../../../dtos/update-user-dto';
+import {
+  IFindUser,
+  IUpdatePartialUser,
+  IUser,
+} from '../../../interfaces/user.interface';
 import { UserService } from '../../../user.service';
 import { User } from '../entities/user.entity';
-import { IFindUser } from '../../../interfaces/find-user.interface';
 
 @Injectable()
 export default class UserRepository implements UserService {
@@ -17,15 +18,10 @@ export default class UserRepository implements UserService {
   ) {}
 
   async create({ email, name, password }: CreateUserDTO): Promise<User> {
-    const encryptedPassword = await bcrypt.hash(
-      password,
-      await bcrypt.genSalt(),
-    );
-
     const user = this.usersRepository.create({
       email,
       name,
-      password: encryptedPassword,
+      password,
     });
 
     return this.usersRepository.save(user);
@@ -51,41 +47,16 @@ export default class UserRepository implements UserService {
     }
   }
 
-  async update(id: number, data: UpdateUserDTO): Promise<User> {
-    const encryptedPassword = await bcrypt.hash(
-      data.password,
-      await bcrypt.genSalt(),
-    );
-
-    await this.usersRepository.update(id, {
-      ...data,
-      password: encryptedPassword,
-      birthAt: data.birthAt ? new Date(data.birthAt) : undefined,
-    });
-
-    // FIXME: it does not return other repository function inside itself
-    return this.findOne({ id }) as Promise<User>;
+  async update(id: number, data: IUser): Promise<any> {
+    return await this.usersRepository.update(id, data);
   }
 
-  async updatePartial(id: number, data: UpdatePatchUserDTO): Promise<User> {
-    let encryptedPassword: string = null;
+  async updatePartial(id: number, data: IUpdatePartialUser): Promise<boolean> {
+    await this.usersRepository.update(id, data);
 
-    if (data.password) {
-      encryptedPassword = await bcrypt.hash(
-        data.password,
-        await bcrypt.genSalt(),
-      );
-    }
-
-    await this.usersRepository.update(id, {
-      ...data,
-      password: encryptedPassword ? encryptedPassword : data.password,
-      birthAt: data.birthAt ? new Date(data.birthAt) : undefined,
-    });
-
-    // FIXME: it does not return other repository function inside itself
-    return this.findOne({ id });
+    return true;
   }
+
   async delete(id: number): Promise<any> {
     return this.usersRepository.delete(id);
   }

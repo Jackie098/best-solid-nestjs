@@ -25,6 +25,8 @@ import { Roles } from '../../../core/decorators/roles.decorator';
 import { AuthGuard } from '../../../core/guards/auth.guard';
 import { RoleGuard } from '../../../core/guards/role.guard';
 import { LogInterceptor } from '../../../core/interceptors/log.interceptor';
+import AuthJwtStrategyService from '../../../shared/auth/infra/auth-jwt-strategy.service';
+import { AuthService } from '../../../shared/auth/auth.service';
 
 @Roles(Role.Admin)
 @UseGuards(AuthGuard, RoleGuard)
@@ -34,6 +36,7 @@ import { LogInterceptor } from '../../../core/interceptors/log.interceptor';
 export class UserController {
   constructor(
     @Inject(UserRepository) private readonly userService: UserService,
+    @Inject(AuthJwtStrategyService) private readonly authService: AuthService,
   ) {}
 
   @UseGuards(ThrottlerGuard)
@@ -49,12 +52,26 @@ export class UserController {
 
   @Post()
   async create(@Body() data: CreateUserDTO) {
-    return this.userService.create(data);
+    const encryptedPassword = await this.authService.encryptPassword(
+      data.password,
+    );
+
+    return this.userService.create({ ...data, password: encryptedPassword });
   }
 
   @Put(':id')
   async update(@ParamId() id: number, @Body() data: UpdateUserDTO) {
-    return this.userService.update(id, data);
+    const encryptedPassword = await this.authService.encryptPassword(
+      data.password,
+    );
+
+    await this.userService.update(id, {
+      ...data,
+      password: encryptedPassword,
+      birthAt: data.birthAt ? new Date(data.birthAt) : undefined,
+    });
+
+    return this.userService.findOne({ id });
   }
 
   @Patch(':id')
@@ -62,7 +79,19 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdatePatchUserDTO,
   ) {
-    return this.userService.updatePartial(id, data);
+    let encryptedPassword: string = null;
+
+    if (data.password) {
+      encryptedPassword = await this.authService.encryptPassword(data.password);
+    }
+
+    await this.userService.updatePartial(id, {
+      ...data,
+      password: encryptedPassword ? encryptedPassword : data.password,
+      birthAt: data.birthAt ? new Date(data.birthAt) : undefined,
+    });
+
+    return this.userService.findOne({ id });
   }
 
   @Delete(':id')

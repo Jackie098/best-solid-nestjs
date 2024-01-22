@@ -1,8 +1,10 @@
 import { CreateUserDTO } from './dtos/create-user-dto';
-import { UpdatePatchUserDTO } from './dtos/update-patch-user-dto';
-import { UpdateUserDTO } from './dtos/update-user-dto';
 import { User } from './infra/typeorm/entities/user.entity';
-import { IFindUser } from './interfaces/find-user.interface';
+import {
+  IFindUser,
+  IUpdatePartialUser,
+  IUser,
+} from './interfaces/user.interface';
 
 export abstract class UserService {
   public create(user: CreateUserDTO): Promise<User> {
@@ -17,12 +19,12 @@ export abstract class UserService {
     return data as unknown as Promise<User | null>;
   }
 
-  public update(id: number, data: UpdateUserDTO): Promise<User> {
-    return { id, data } as unknown as Promise<User>;
+  public update(id: number, data: IUser): Promise<any> {
+    return {} as Promise<any>;
   }
 
-  public updatePartial(id: number, data: UpdatePatchUserDTO): Promise<User> {
-    return { id, data } as unknown as Promise<User>;
+  public updatePartial(id: number, data: IUpdatePartialUser): Promise<boolean> {
+    return { id, data } as unknown as Promise<boolean>;
   }
 
   public delete(id: number): Promise<any> {
