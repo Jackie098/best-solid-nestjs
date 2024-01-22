@@ -15,7 +15,7 @@ import {
 
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Role } from '../../../core/enum/role.enum';
-import { AbstractUserService } from './service/abstract-user.service';
+import { UserService } from './user.service';
 import { CreateUserDTO } from './dtos/create-user-dto';
 import { UpdateUserDTO } from './dtos/update-user-dto';
 import { UpdatePatchUserDTO } from './dtos/update-patch-user-dto';
@@ -26,7 +26,6 @@ import { AuthGuard } from '../../../core/guards/auth.guard';
 import { RoleGuard } from '../../../core/guards/role.guard';
 import { LogInterceptor } from '../../../core/interceptors/log.interceptor';
 
-// CHECKPOINT - Import guards, interceptors, etc
 @Roles(Role.Admin)
 @UseGuards(AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor)
@@ -34,7 +33,7 @@ import { LogInterceptor } from '../../../core/interceptors/log.interceptor';
 @Controller('users')
 export class UserController {
   constructor(
-    @Inject(UserRepository) private readonly userService: AbstractUserService,
+    @Inject(UserRepository) private readonly userService: UserService,
   ) {}
 
   @UseGuards(ThrottlerGuard)

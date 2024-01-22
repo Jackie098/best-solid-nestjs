@@ -8,15 +8,15 @@ import {
 import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './infra/typeorm/entities/user.entity';
-import { AbstractUserService } from './service/abstract-user.service';
+import { UserService } from './user.service';
 import UserRepository from './infra/typeorm/repositories/user.repository';
 import { UserIdCheckMiddleware } from '../../../core/middlewares/user-id-check.middleware';
 
 @Module({
   imports: [forwardRef(() => AuthModule), TypeOrmModule.forFeature([User])],
   controllers: [UserController],
-  providers: [{ provide: AbstractUserService, useClass: UserRepository }],
-  exports: [{ provide: AbstractUserService, useClass: UserRepository }],
+  providers: [{ provide: UserService, useClass: UserRepository }],
+  exports: [{ provide: UserService, useClass: UserRepository }],
 })
 export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

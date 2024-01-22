@@ -1,9 +1,9 @@
-import { CreateUserDTO } from '../dtos/create-user-dto';
-import { UpdatePatchUserDTO } from '../dtos/update-patch-user-dto';
-import { UpdateUserDTO } from '../dtos/update-user-dto';
-import { User } from '../infra/typeorm/entities/user.entity';
+import { CreateUserDTO } from './dtos/create-user-dto';
+import { UpdatePatchUserDTO } from './dtos/update-patch-user-dto';
+import { UpdateUserDTO } from './dtos/update-user-dto';
+import { User } from './infra/typeorm/entities/user.entity';
 
-export abstract class AbstractUserService {
+export abstract class UserService {
   public create(user: CreateUserDTO): Promise<User> {
     return user as unknown as Promise<User>;
   }
