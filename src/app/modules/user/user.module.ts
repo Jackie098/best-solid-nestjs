@@ -11,6 +11,7 @@ import { User } from './infra/typeorm/entities/user.entity';
 import { UserService } from './user.service';
 import UserRepository from './infra/typeorm/repositories/user.repository';
 import { UserIdCheckMiddleware } from '../../../core/middlewares/user-id-check.middleware';
+import { AuthModule } from '../../../shared/auth/auth.module';
 
 @Module({
   imports: [forwardRef(() => AuthModule), TypeOrmModule.forFeature([User])],
