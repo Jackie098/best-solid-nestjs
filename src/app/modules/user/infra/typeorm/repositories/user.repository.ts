@@ -7,6 +7,7 @@ import { UpdatePatchUserDTO } from '../../../dtos/update-patch-user-dto';
 import { UpdateUserDTO } from '../../../dtos/update-user-dto';
 import { UserService } from '../../../user.service';
 import { User } from '../entities/user.entity';
+import { IFindUser } from '../../../interfaces/find-user.interface';
 
 @Injectable()
 export default class UserRepository implements UserService {
@@ -16,16 +17,6 @@ export default class UserRepository implements UserService {
   ) {}
 
   async create({ email, name, password }: CreateUserDTO): Promise<User> {
-    // if (
-    //   await this.usersRepository.exists({
-    //     where: {
-    //       email: email,
-    //     },
-    //   })
-    // ) {
-    //   throw new BadRequestException('User already exists');
-    // }
-
     const encryptedPassword = await bcrypt.hash(
       password,
       await bcrypt.genSalt(),
@@ -44,12 +35,20 @@ export default class UserRepository implements UserService {
     return this.usersRepository.find();
   }
 
-  async findOne(id: number): Promise<User | null> {
-    return this.usersRepository.findOne({
-      where: {
-        id,
-      },
-    });
+  async findOne({ id, email }: IFindUser): Promise<User | null> {
+    if (id) {
+      return this.usersRepository.findOne({
+        where: {
+          id,
+        },
+      });
+    } else {
+      return this.usersRepository.findOne({
+        where: {
+          email,
+        },
+      });
+    }
   }
 
   async update(id: number, data: UpdateUserDTO): Promise<User> {
@@ -65,7 +64,7 @@ export default class UserRepository implements UserService {
     });
 
     // FIXME: it does not return other repository function inside itself
-    return this.findOne(id) as Promise<User>;
+    return this.findOne({ id }) as Promise<User>;
   }
 
   async updatePartial(id: number, data: UpdatePatchUserDTO): Promise<User> {
@@ -85,7 +84,7 @@ export default class UserRepository implements UserService {
     });
 
     // FIXME: it does not return other repository function inside itself
-    return this.findOne(id);
+    return this.findOne({ id });
   }
   async delete(id: number): Promise<any> {
     return this.usersRepository.delete(id);

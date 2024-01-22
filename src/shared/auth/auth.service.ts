@@ -1,35 +1,49 @@
 import { IUser } from '../../app/modules/user/interfaces/user.interface';
-import { SignedToken } from './auth.interfaces';
-import { AuthRegisterDTO } from './dtos/auth-register.dto';
+import {
+  RefreshToken,
+  SignedToken,
+  TokenAgent,
+  TokenPayload,
+} from './auth.interfaces';
 
 export abstract class AuthService {
-  private issuer = 'login';
-  private audience = 'users';
-
   public createToken(user: IUser): SignedToken {
     return {} as SignedToken;
   }
 
   // FIXME: Find out type of verified token and add here
-  public checkToken(token: string) {
+  public checkToken(token: string, tokenAgent: TokenAgent): TokenPayload {
     return {} as any;
   }
 
-  public isValidToken(token: string): boolean {
+  public isValidToken(token: string, tokenAgent: TokenAgent): boolean {
     return false;
   }
 
-  public login(email: string, password: string) {
-    return {} as SignedToken;
+  // NOTE: Login service is not require, it must exists only in controller
+  // public login(email: string, password: string): Promise<SignedToken> {
+  //   return {} as Promise<SignedToken>;
+  // }
+
+  public isValidPassword(
+    userPassword: string,
+    inputPassword: string,
+  ): Promise<boolean> {
+    return {} as Promise<boolean>;
   }
 
-  public forget(email: string) {
-    return {} as SignedToken;
+  public createForgetToken(user: IUser): RefreshToken {
+    return {} as RefreshToken;
   }
 
-  public reset(password: string, token: string) {
-    return {} as SignedToken;
+  public async comparePassword(
+    userPassword: string,
+    inputPassword: string,
+  ): Promise<boolean> {
+    return {} as boolean;
   }
 
-  public register(data: AuthRegisterDTO) {}
+  public encryptPassword(password: string): Promise<string> {
+    return {} as unknown as Promise<string>;
+  }
 }

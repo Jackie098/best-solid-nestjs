@@ -44,7 +44,7 @@ export class UserController {
 
   @Get(':id')
   async findOne(@ParamId() id: number) {
-    return this.userService.findOne(id);
+    return this.userService.findOne({ id });
   }
 
   @Post()
