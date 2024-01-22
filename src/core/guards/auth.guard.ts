@@ -4,7 +4,7 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { AbstractUserService } from '../../app/modules/user/service/abstract-user.service';
+import { UserService } from '../../app/modules/user/user.service';
 import UserRepository from '../../app/modules/user/infra/typeorm/repositories/user.repository';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly authService: AuthService,
     @Inject(UserRepository)
-    private readonly userService: AbstractUserService,
+    private readonly userService: UserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
