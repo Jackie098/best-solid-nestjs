@@ -6,10 +6,13 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../../app/modules/user/user.service';
 import UserRepository from '../../app/modules/user/infra/typeorm/repositories/user.repository';
+import { AuthService } from '../../shared/auth/auth.service';
+import AuthJwtStrategyService from '../../shared/auth/infra/auth-jwt-strategy.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
+    @Inject(AuthJwtStrategyService)
     private readonly authService: AuthService,
     @Inject(UserRepository)
     private readonly userService: UserService,
@@ -22,10 +25,11 @@ export class AuthGuard implements CanActivate {
     try {
       const data = this.authService.checkToken(
         (authorization ?? '').split(' ')[1],
+        { issuer: 'login', audience: 'users' },
       );
 
       request.token = data;
-      request.user = await this.userService.findOne(data.id);
+      request.user = await this.userService.findOne({ id: data.id });
 
       return true;
     } catch (error) {
