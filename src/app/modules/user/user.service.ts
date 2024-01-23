@@ -1,4 +1,4 @@
-import { CreateUserDTO } from './dtos/create-user-dto';
+import { CreateUserDTO } from './dtos';
 import { User } from './infra/typeorm/entities/user.entity';
 import {
   IFindUser,

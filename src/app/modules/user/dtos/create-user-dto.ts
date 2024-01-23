@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { Role } from '../../../../core/enum/role.enum';
 
-export class CreateUserDTO {
+export default class CreateUserDTO {
   @IsString()
   name: string;
 

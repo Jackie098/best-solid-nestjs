@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDTO } from '../../../dtos/create-user-dto';
+import { CreateUserDTO } from '../../../dtos';
 import {
   IFindUser,
   IUpdatePartialUser,

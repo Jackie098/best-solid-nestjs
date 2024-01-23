@@ -16,9 +16,7 @@ import {
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Role } from '../../../core/enum/role.enum';
 import { UserService } from './user.service';
-import { CreateUserDTO } from './dtos/create-user-dto';
-import { UpdateUserDTO } from './dtos/update-user-dto';
-import { UpdatePatchUserDTO } from './dtos/update-patch-user-dto';
+import { CreateUserDTO, UpdatePatchUserDTO, UpdateUserDTO } from './dtos';
 import UserRepository from './infra/typeorm/repositories/user.repository';
 import { ParamId } from '../../../core/decorators/param-id.decorator';
 import { Roles } from '../../../core/decorators/roles.decorator';
