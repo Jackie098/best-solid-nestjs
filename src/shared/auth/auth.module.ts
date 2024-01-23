@@ -14,11 +14,11 @@ import AuthJwtStrategyService from './infra/auth-jwt-strategy.service';
       secret: String(process.env.JWT_SECRET),
     }),
     forwardRef(() => UserModule),
-    // FileModule,
     TypeOrmModule.forFeature([User]),
+    // FileModule,
   ],
   controllers: [AuthController],
   providers: [{ provide: AuthService, useClass: AuthJwtStrategyService }],
-  exports: [AuthService],
+  exports: [{ provide: AuthService, useClass: AuthJwtStrategyService }],
 })
 export class AuthModule {}
